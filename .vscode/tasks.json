@@ -1,0 +1,32 @@
+/* --------------- Copyright (c) Takeoff Technical LLC 2022 -------------------
+ * Purpose: Defines tasks that automate steps required to deploy and debug. 
+ * Refer:   https://takeofftechnical.com/x-compile-cpp-bbb
+ * License: MIT
+ * ----------------------------------------------------------------------------
+*/
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Make Deploy Path",
+            "type": "shell",
+            "command": "ssh",
+            "args": [
+                "${env:TARGET_USER}@${env:TARGET_BBB}",
+                "mkdir",
+                "-p",
+                "/opt/builds/${env:USER}/${env:BUILD_HOST}/${workspaceRootFolderName}/"
+            ],
+        },
+        {
+            "label": "Deploy to Target",
+            "dependsOn": [ "Make Deploy Path", ],
+            "type": "shell",
+            "command": "scp",
+            "args": [
+                "${command:cmake.launchTargetPath}",
+                "${env:TARGET_USER}@${env:TARGET_BBB}:/opt/builds/${env:USER}/${env:BUILD_HOST}/${workspaceRootFolderName}/",
+            ],
+        }
+    ]
+}

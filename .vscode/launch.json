@@ -1,0 +1,35 @@
+/* --------------- Copyright (c) Takeoff Technical LLC 2022 -------------------
+ * Purpose: Defines debug launch configuration(s) for the project. 
+ * Refer:   https://takeofftechnical.com/x-compile-cpp-bbb
+ * License: MIT
+ * ----------------------------------------------------------------------------
+*/
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "BBB Remote GDB",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "/opt/builds/${env:USER}/${env:BUILD_HOST}/${workspaceRootFolderName}/${command:cmake.getLaunchTargetFilename}",
+            "cwd": "/opt/builds/${env:USER}/${env:BUILD_HOST}/${workspaceRootFolderName}/",
+            "preLaunchTask": "Deploy to Target",
+            "pipeTransport": {
+                "pipeCwd": "/usr/bin",
+                "pipeProgram": "/usr/bin/ssh",
+                "pipeArgs": [ "${env:TARGET_USER}@${env:TARGET_BBB}" ],
+                "debuggerPath": "stdbuf -i0 -o0 -e0 /usr/bin/gdb"
+            },
+            "MIMode": "gdb",
+            "miDebuggerPath": "/usr/bin/gdb-multiarch",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": false
+                },
+            ],
+            "stopAtEntry": true,
+        }
+    ]
+}
